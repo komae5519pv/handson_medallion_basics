@@ -42,7 +42,8 @@ handson_hc_trade_area/
 │   ├── 05_テーブル設定.py                 spark.sql() でDDL実行
 │   ├── 06_Genie作成手順.py               Genie Space セットアップ
 │   ├── 07_ダッシュボード作成手順.py         AI/BI ダッシュボード作成
-│   └── 08_Jobsワークフロー作成手順.py      Jobs DAGワークフロー
+│   ├── 08_Jobsワークフロー作成手順.py      Jobs DAGワークフロー
+│   └── 09_Genieインタラクティブ分析.py     Genie Code エージェントモードで対話的分析
 │
 ├── 02_SQL+Python/                       ← SQL+Python トラック（spark.sql() + Pythonループ）
 │   ├── 01_データ準備.py                   サンプルCSV生成 → Volume格納
@@ -52,7 +53,8 @@ handson_hc_trade_area/
 │   ├── 05_テーブル設定.py                 Python辞書＋ループでDDL一括実行
 │   ├── 06_Genie作成手順.py               Genie Space セットアップ
 │   ├── 07_ダッシュボード作成手順.py         AI/BI ダッシュボード作成
-│   └── 08_Jobsワークフロー作成手順.py      Jobs DAGワークフロー
+│   ├── 08_Jobsワークフロー作成手順.py      Jobs DAGワークフロー
+│   └── 09_Genieインタラクティブ分析.py     Genie Code エージェントモードで対話的分析
 │
 └── _images/                             ← ダッシュボード手順用スクリーンショット
 ```
@@ -93,3 +95,4 @@ handson_hc_trade_area/
 | 06 | Genie作成手順 | 20分 | Genie Space 作成・General Instructions・サンプル質問 |
 | 07 | ダッシュボード作成手順 | 15分 | AI/BI ダッシュボード作成（Genie Code）・Genie連携 |
 | 08 | Jobsワークフロー作成手順 | 15分 | ノートブックをJobsでDAG化・実行体験 |
+| 09 | Genieインタラクティブ分析 | 15分 | Genie Code エージェントモードで自然言語→コード生成→分析洞察 |
