@@ -1,0 +1,1709 @@
+{
+  "datasets": [
+    {
+      "name": "rfm",
+      "displayName": "RFM分析",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  gd_rfm"
+      ],
+      "catalog": "konomi_demo_catalog",
+      "schema": "trade_area_analysis"
+    },
+    {
+      "name": "category_sales",
+      "displayName": "カテゴリ別売上",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  gd_category_sales"
+      ],
+      "catalog": "konomi_demo_catalog",
+      "schema": "trade_area_analysis"
+    },
+    {
+      "name": "store_trade_area",
+      "displayName": "店舗別商圏データ",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  gd_store_trade_area"
+      ],
+      "catalog": "konomi_demo_catalog",
+      "schema": "trade_area_analysis"
+    },
+    {
+      "name": "store_sales",
+      "displayName": "店舗月別売上",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  gd_store_sales_summary"
+      ],
+      "catalog": "konomi_demo_catalog",
+      "schema": "trade_area_analysis"
+    }
+  ],
+  "pages": [
+    {
+      "name": "5032ee06",
+      "displayName": "商圏概況",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## 🏠 商圏概況サマリ\n",
+                "全店舗の売上・顧客・競合環境を俯瞰"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_total_sales",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_sales",
+                  "fields": [
+                    {
+                      "name": "monthly(sale_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `sale_month`)"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `sale_month`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "売上合計",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_sales)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "JPY",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    }
+                  },
+                  "style": {
+                    "fontSize": 36
+                  },
+                  "displayName": "売上合計"
+                },
+                "target": {
+                  "fieldName": "sum(total_sales)",
+                  "style": {
+                    "rules": [
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "0"
+                          },
+                          "operator": ">="
+                        },
+                        "color": "#2E7D32"
+                      },
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "0"
+                          },
+                          "operator": "<"
+                        },
+                        "color": "#C62828"
+                      }
+                    ]
+                  },
+                  "change": {
+                    "type": "percent"
+                  },
+                  "period": {
+                    "type": "relative-to-value-period",
+                    "offset": -1
+                  },
+                  "displayName": "前月売上"
+                },
+                "period": {
+                  "fieldName": "monthly(sale_month)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_stores",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_sales",
+                  "fields": [
+                    {
+                      "name": "monthly(sale_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `sale_month`)"
+                    },
+                    {
+                      "name": "avg(avg_basket)",
+                      "expression": "AVG(`avg_basket`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `sale_month`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "平均客単価",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(avg_basket)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "JPY",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    },
+                    "abbreviation": "none"
+                  },
+                  "style": {
+                    "fontSize": 36
+                  },
+                  "displayName": "平均客単価"
+                },
+                "target": {
+                  "fieldName": "avg(avg_basket)",
+                  "style": {
+                    "rules": [
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "0"
+                          },
+                          "operator": ">="
+                        },
+                        "color": "#2E7D32"
+                      },
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "0"
+                          },
+                          "operator": "<"
+                        },
+                        "color": "#C62828"
+                      }
+                    ]
+                  },
+                  "change": {
+                    "type": "percent"
+                  },
+                  "period": {
+                    "type": "relative-to-value-period",
+                    "offset": -1
+                  },
+                  "displayName": "前月客単価"
+                },
+                "period": {
+                  "fieldName": "monthly(sale_month)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_customers",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_sales",
+                  "fields": [
+                    {
+                      "name": "monthly(sale_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `sale_month`)"
+                    },
+                    {
+                      "name": "sum(unique_customers)",
+                      "expression": "SUM(`unique_customers`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `sale_month`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "ユニーク顧客数",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(unique_customers)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    }
+                  },
+                  "style": {
+                    "fontSize": 36
+                  },
+                  "displayName": "ユニーク顧客数"
+                },
+                "target": {
+                  "fieldName": "sum(unique_customers)",
+                  "style": {
+                    "rules": [
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "0"
+                          },
+                          "operator": ">="
+                        },
+                        "color": "#2E7D32"
+                      },
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "0"
+                          },
+                          "operator": "<"
+                        },
+                        "color": "#C62828"
+                      }
+                    ]
+                  },
+                  "change": {
+                    "type": "percent"
+                  },
+                  "period": {
+                    "type": "relative-to-value-period",
+                    "offset": -1
+                  },
+                  "displayName": "前月顧客数"
+                },
+                "period": {
+                  "fieldName": "monthly(sale_month)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi_avg_transactions",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_sales",
+                  "fields": [
+                    {
+                      "name": "monthly(sale_month)",
+                      "expression": "DATE_TRUNC(\"MONTH\", `sale_month`)"
+                    },
+                    {
+                      "name": "sum(tx_count)",
+                      "expression": "SUM(`tx_count`)"
+                    }
+                  ],
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "DATE_TRUNC(\"MONTH\", `sale_month`)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "総取引件数",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(tx_count)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 0
+                    }
+                  },
+                  "style": {
+                    "fontSize": 36
+                  },
+                  "displayName": "総取引件数"
+                },
+                "target": {
+                  "fieldName": "sum(tx_count)",
+                  "style": {
+                    "rules": [
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "0"
+                          },
+                          "operator": ">="
+                        },
+                        "color": "#2E7D32"
+                      },
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "0"
+                          },
+                          "operator": "<"
+                        },
+                        "color": "#C62828"
+                      }
+                    ]
+                  },
+                  "change": {
+                    "type": "percent"
+                  },
+                  "period": {
+                    "type": "relative-to-value-period",
+                    "offset": -1
+                  },
+                  "displayName": "前月取引件数"
+                },
+                "period": {
+                  "fieldName": "monthly(sale_month)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 9,
+            "y": 2,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "store_map",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_trade_area",
+                  "fields": [
+                    {
+                      "name": "store_type",
+                      "expression": "`store_type`"
+                    },
+                    {
+                      "name": "store_lat",
+                      "expression": "`store_lat`"
+                    },
+                    {
+                      "name": "store_lon",
+                      "expression": "`store_lon`"
+                    },
+                    {
+                      "name": "store_name",
+                      "expression": "`store_name`"
+                    },
+                    {
+                      "name": "sum(competitor_count)",
+                      "expression": "SUM(`competitor_count`)"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "店舗マップ",
+                "showTitle": true
+              },
+              "widgetType": "symbol-map",
+              "encodings": {
+                "coordinates": {
+                  "latitude": {
+                    "fieldName": "store_lat",
+                    "displayName": "緯度"
+                  },
+                  "longitude": {
+                    "fieldName": "store_lon",
+                    "displayName": "経度"
+                  }
+                },
+                "color": {
+                  "fieldName": "store_type",
+                  "displayName": "店舗タイプ",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "コンパクト",
+                        "color": {
+                          "themeColorType": "fontColor"
+                        }
+                      },
+                      {
+                        "value": "標準",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 8
+                        }
+                      }
+                    ]
+                  }
+                },
+                "size": {
+                  "fieldName": "sum(total_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "売上合計"
+                },
+                "extra": [
+                  {
+                    "fieldName": "store_name",
+                    "displayName": "店舗名"
+                  },
+                  {
+                    "fieldName": "sum(competitor_count)",
+                    "displayName": "競合数"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "sales_by_pref",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_trade_area",
+                  "fields": [
+                    {
+                      "name": "store_type",
+                      "expression": "`store_type`"
+                    },
+                    {
+                      "name": "store_prefecture",
+                      "expression": "`store_prefecture`"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "都道府県別売上",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "store_prefecture",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "displayName": "都道府県",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_sales)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "JPY",
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "売上合計",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "store_type",
+                  "legend": {
+                    "position": "top"
+                  },
+                  "displayName": "店舗タイプ",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "コンパクト",
+                        "color": {
+                          "themeColorType": "fontColor"
+                        }
+                      },
+                      {
+                        "value": "標準",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 8
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 5,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "store_scatter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_trade_area",
+                  "fields": [
+                    {
+                      "name": "store_type",
+                      "expression": "`store_type`"
+                    },
+                    {
+                      "name": "floor_area_sqm",
+                      "expression": "`floor_area_sqm`"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "売場面積 vs 売上",
+                "showTitle": true
+              },
+              "widgetType": "scatter",
+              "encodings": {
+                "x": {
+                  "fieldName": "floor_area_sqm",
+                  "displayName": "売場面積(㎡)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_sales)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "JPY",
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "売上合計",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "store_type",
+                  "legend": {
+                    "position": "top"
+                  },
+                  "displayName": "店舗タイプ",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "コンパクト",
+                        "color": {
+                          "themeColorType": "fontColor"
+                        }
+                      },
+                      {
+                        "value": "標準",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 8
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "competitor_bar",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_trade_area",
+                  "fields": [
+                    {
+                      "name": "sum(competitor_count)",
+                      "expression": "SUM(`competitor_count`)"
+                    },
+                    {
+                      "name": "store_name",
+                      "expression": "`store_name`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "店舗別 競合店数",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "store_name",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "displayName": "店舗名",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(competitor_count)",
+                  "displayName": "競合店数",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "sum(competitor_count)",
+                  "displayName": "競合店数",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 12,
+            "width": 6,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "sales_trends",
+      "displayName": "売上トレンド",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## 📈 売上トレンド分析\n",
+                "月次売上推移と商品カテゴリ別の売上構成"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "monthly_trend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_sales",
+                  "fields": [
+                    {
+                      "name": "store_prefecture",
+                      "expression": "`store_prefecture`"
+                    },
+                    {
+                      "name": "sale_month",
+                      "expression": "`sale_month`"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "月次売上推移",
+                "showTitle": true
+              },
+              "mark": {
+                "layout": "stack"
+              },
+              "widgetType": "area",
+              "encodings": {
+                "x": {
+                  "fieldName": "sale_month",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "displayName": "売上月",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_sales)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "JPY",
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "売上合計",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "store_prefecture",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "都道府県",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "category_pie",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "category_sales",
+                  "fields": [
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    },
+                    {
+                      "name": "category_name",
+                      "expression": "`category_name`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "カテゴリ別売上構成",
+                "showTitle": true
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(total_sales)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "売上合計"
+                },
+                "color": {
+                  "fieldName": "category_name",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "カテゴリ",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 5,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "category_trend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "category_sales",
+                  "fields": [
+                    {
+                      "name": "category_name",
+                      "expression": "`category_name`"
+                    },
+                    {
+                      "name": "sale_month",
+                      "expression": "`sale_month`"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "カテゴリ別売上推移",
+                "showTitle": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "sale_month",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "displayName": "売上月",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_sales)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "JPY",
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "売上合計",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "category_name",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "カテゴリ",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 8,
+            "width": 7,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "store_ranking",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "store_sales",
+                  "fields": [
+                    {
+                      "name": "store_name",
+                      "expression": "`store_name`"
+                    },
+                    {
+                      "name": "sale_month",
+                      "expression": "`sale_month`"
+                    },
+                    {
+                      "name": "sum(total_sales)",
+                      "expression": "SUM(`total_sales`)"
+                    }
+                  ],
+                  "cubeGroupingSets": {
+                    "sets": [
+                      {
+                        "fieldNames": [
+                          "store_name"
+                        ]
+                      },
+                      {
+                        "fieldNames": [
+                          "sale_month"
+                        ]
+                      }
+                    ]
+                  },
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "ASC",
+                      "expression": "`store_name`"
+                    },
+                    {
+                      "direction": "ASC",
+                      "expression": "`sale_month`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "店舗別月次売上一覧",
+                "showTitle": true
+              },
+              "widgetType": "pivot",
+              "encodings": {
+                "rows": [
+                  {
+                    "fieldName": "store_name",
+                    "displayTotal": true,
+                    "displayName": "店舗名"
+                  }
+                ],
+                "columns": [
+                  {
+                    "fieldName": "sale_month",
+                    "displayTotal": false,
+                    "displayName": "売上月"
+                  }
+                ],
+                "cell": {
+                  "type": "multi-cell",
+                  "fields": [
+                    {
+                      "fieldName": "sum(total_sales)",
+                      "cellType": "text",
+                      "displayName": "売上合計",
+                      "style": {
+                        "type": "color-scale",
+                        "backgroundColor": {
+                          "scale": {
+                            "type": "quantitative",
+                            "colorRamp": {
+                              "mode": "scheme",
+                              "scheme": "blues"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "customer_analysis",
+      "displayName": "顧客分析",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## 👥 顧客セグメント分析\n",
+                "RFM分析による顧客セグメントの可視化"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "rfm_segment_bar",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "rfm",
+                  "fields": [
+                    {
+                      "name": "rfm_segment",
+                      "expression": "`rfm_segment`"
+                    },
+                    {
+                      "name": "count(customer_id)",
+                      "expression": "COUNT(`customer_id`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "RFMセグメント分布",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "rfm_segment",
+                  "displayName": "セグメント",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "count(customer_id)",
+                  "displayName": "顧客数",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "rfm_segment",
+                  "legend": {
+                    "hide": true
+                  },
+                  "displayName": "セグメント",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "rfm_heatmap",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "rfm",
+                  "fields": [
+                    {
+                      "name": "r_score",
+                      "expression": "`r_score`"
+                    },
+                    {
+                      "name": "f_score",
+                      "expression": "`f_score`"
+                    },
+                    {
+                      "name": "count(customer_id)",
+                      "expression": "COUNT(`customer_id`)"
+                    }
+                  ],
+                  "cubeGroupingSets": {
+                    "sets": [
+                      {
+                        "fieldNames": [
+                          "r_score"
+                        ]
+                      },
+                      {
+                        "fieldNames": [
+                          "f_score"
+                        ]
+                      }
+                    ]
+                  },
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "ASC",
+                      "expression": "`r_score`"
+                    },
+                    {
+                      "direction": "ASC",
+                      "expression": "`f_score`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "R×Fスコア 顧客分布",
+                "showTitle": true
+              },
+              "widgetType": "pivot",
+              "encodings": {
+                "rows": [
+                  {
+                    "fieldName": "r_score",
+                    "displayTotal": true,
+                    "displayName": "Rスコア"
+                  }
+                ],
+                "columns": [
+                  {
+                    "fieldName": "f_score",
+                    "displayTotal": true,
+                    "displayName": "Fスコア"
+                  }
+                ],
+                "cell": {
+                  "type": "multi-cell",
+                  "fields": [
+                    {
+                      "fieldName": "count(customer_id)",
+                      "cellType": "text",
+                      "displayName": "顧客数",
+                      "style": {
+                        "type": "color-scale",
+                        "backgroundColor": {
+                          "scale": {
+                            "type": "quantitative",
+                            "colorRamp": {
+                              "mode": "scheme",
+                              "scheme": "blues"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "rfm_scatter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "rfm",
+                  "fields": [
+                    {
+                      "name": "rfm_segment",
+                      "expression": "`rfm_segment`"
+                    },
+                    {
+                      "name": "frequency",
+                      "expression": "`frequency`"
+                    },
+                    {
+                      "name": "monetary",
+                      "expression": "`monetary`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Frequency vs Monetary",
+                "showTitle": true
+              },
+              "widgetType": "scatter",
+              "encodings": {
+                "x": {
+                  "fieldName": "frequency",
+                  "displayName": "Frequency",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "monetary",
+                  "displayName": "Monetary",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "rfm_segment",
+                  "legend": {
+                    "position": "right"
+                  },
+                  "displayName": "セグメント",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "rfm_table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "rfm",
+                  "fields": [
+                    {
+                      "name": "rfm_segment",
+                      "expression": "`rfm_segment`"
+                    },
+                    {
+                      "name": "count(customer_id)",
+                      "expression": "COUNT(`customer_id`)"
+                    },
+                    {
+                      "name": "avg(recency)",
+                      "expression": "AVG(`recency`)"
+                    },
+                    {
+                      "name": "avg(frequency)",
+                      "expression": "AVG(`frequency`)"
+                    },
+                    {
+                      "name": "avg(monetary)",
+                      "expression": "AVG(`monetary`)"
+                    }
+                  ],
+                  "cubeGroupingSets": {
+                    "sets": [
+                      {
+                        "fieldNames": [
+                          "rfm_segment"
+                        ]
+                      },
+                      {}
+                    ]
+                  },
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "ASC",
+                      "expression": "`rfm_segment`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "セグメント別指標",
+                "showTitle": true
+              },
+              "widgetType": "pivot",
+              "encodings": {
+                "rows": [
+                  {
+                    "fieldName": "rfm_segment",
+                    "displayTotal": true,
+                    "displayName": "セグメント"
+                  }
+                ],
+                "cell": {
+                  "type": "multi-cell",
+                  "fields": [
+                    {
+                      "fieldName": "count(customer_id)",
+                      "cellType": "text",
+                      "displayName": "顧客数"
+                    },
+                    {
+                      "fieldName": "avg(recency)",
+                      "cellType": "text",
+                      "displayName": "平均Recency"
+                    },
+                    {
+                      "fieldName": "avg(frequency)",
+                      "cellType": "text",
+                      "displayName": "平均Frequency"
+                    },
+                    {
+                      "fieldName": "avg(monetary)",
+                      "cellType": "text",
+                      "displayName": "平均Monetary"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 8,
+            "width": 6,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "global_filters",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "filter_store_type",
+            "queries": [
+              {
+                "name": "dashboards/01f13d7d4b8b1b7980819b3dc590b33c/datasets/01f13d7e275313ccb0d0e735ef8be795_store_type",
+                "query": {
+                  "datasetName": "store_trade_area",
+                  "fields": [
+                    {
+                      "name": "store_type",
+                      "expression": "`store_type`"
+                    },
+                    {
+                      "name": "store_type_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "店舗タイプ",
+                "showTitle": true
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "store_type",
+                    "queryName": "dashboards/01f13d7d4b8b1b7980819b3dc590b33c/datasets/01f13d7e275313ccb0d0e735ef8be795_store_type"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "filter_prefecture",
+            "queries": [
+              {
+                "name": "dashboards/01f13d7d4b8b1b7980819b3dc590b33c/datasets/01f13d7e275313ccb0d0e735ef8be795_store_prefecture",
+                "query": {
+                  "datasetName": "store_trade_area",
+                  "fields": [
+                    {
+                      "name": "store_prefecture",
+                      "expression": "`store_prefecture`"
+                    },
+                    {
+                      "name": "store_prefecture_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              },
+              {
+                "name": "dashboards/01f13d7d4b8b1b7980819b3dc590b33c/datasets/01f13d7e283d11b780b2240c31b88f85_store_prefecture",
+                "query": {
+                  "datasetName": "store_sales",
+                  "fields": [
+                    {
+                      "name": "store_prefecture",
+                      "expression": "`store_prefecture`"
+                    },
+                    {
+                      "name": "store_prefecture_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "都道府県",
+                "showTitle": true
+              },
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "store_prefecture",
+                    "queryName": "dashboards/01f13d7d4b8b1b7980819b3dc590b33c/datasets/01f13d7e275313ccb0d0e735ef8be795_store_prefecture"
+                  },
+                  {
+                    "fieldName": "store_prefecture",
+                    "queryName": "dashboards/01f13d7d4b8b1b7980819b3dc590b33c/datasets/01f13d7e283d11b780b2240c31b88f85_store_prefecture"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 0,
+            "width": 3,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": {
+        "light": "#F6FAFB",
+        "dark": "#1B1F23"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#2A2F35"
+      },
+      "widgetBorderColor": {
+        "light": "#D7E1E9",
+        "dark": "#3C444C"
+      },
+      "fontColor": {
+        "light": "#374151",
+        "dark": "#E4E9EE"
+      },
+      "selectionColor": {
+        "light": "#5FA8D3",
+        "dark": "#5FA8D3"
+      },
+      "visualizationColors": [
+        "#5FA8D3",
+        "#70BEE1",
+        "#89CCE7",
+        "#A1DAEC",
+        "#B3E6DC",
+        "#89C7A8",
+        "#6EAD80",
+        "#589F60",
+        "#478743",
+        "#356C2A"
+      ],
+      "widgetHeaderAlignment": "LEFT"
+    },
+    "genieSpace": {
+      "isEnabled": true,
+      "overrideId": "01f13d7c6dbe1668bb4e0b1c86c69d59",
+      "enablementMode": "ENABLED"
+    },
+    "applyModeEnabled": false
+  }
+}

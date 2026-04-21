@@ -133,7 +133,7 @@ display(spark.sql(f"DESCRIBE TABLE EXTENDED sl_stores"))
 
 # DBTITLE 1,PK制約 — sl_stores
 spark.sql(f"ALTER TABLE sl_stores ALTER COLUMN store_id SET NOT NULL")
-spark.sql(f"ALTER TABLE sl_stores DROP CONSTRAINT IF EXISTS pk_stores")
+spark.sql(f"ALTER TABLE sl_stores DROP CONSTRAINT IF EXISTS pk_stores CASCADE")
 spark.sql(f"ALTER TABLE sl_stores ADD CONSTRAINT pk_stores PRIMARY KEY (store_id)")
 print("✅ sl_stores: PK(store_id)")
 
@@ -141,7 +141,7 @@ print("✅ sl_stores: PK(store_id)")
 
 # DBTITLE 1,PK制約 — sl_products
 spark.sql(f"ALTER TABLE sl_products ALTER COLUMN product_id SET NOT NULL")
-spark.sql(f"ALTER TABLE sl_products DROP CONSTRAINT IF EXISTS pk_products")
+spark.sql(f"ALTER TABLE sl_products DROP CONSTRAINT IF EXISTS pk_products CASCADE")
 spark.sql(f"ALTER TABLE sl_products ADD CONSTRAINT pk_products PRIMARY KEY (product_id)")
 print("✅ sl_products: PK(product_id)")
 
@@ -149,7 +149,7 @@ print("✅ sl_products: PK(product_id)")
 
 # DBTITLE 1,PK制約 — sl_customers
 spark.sql(f"ALTER TABLE sl_customers ALTER COLUMN customer_id SET NOT NULL")
-spark.sql(f"ALTER TABLE sl_customers DROP CONSTRAINT IF EXISTS pk_customers")
+spark.sql(f"ALTER TABLE sl_customers DROP CONSTRAINT IF EXISTS pk_customers CASCADE")
 spark.sql(f"ALTER TABLE sl_customers ADD CONSTRAINT pk_customers PRIMARY KEY (customer_id)")
 print("✅ sl_customers: PK(customer_id)")
 
@@ -157,7 +157,7 @@ print("✅ sl_customers: PK(customer_id)")
 
 # DBTITLE 1,PK制約 — sl_sales
 spark.sql(f"ALTER TABLE sl_sales ALTER COLUMN sale_id SET NOT NULL")
-spark.sql(f"ALTER TABLE sl_sales DROP CONSTRAINT IF EXISTS pk_sales")
+spark.sql(f"ALTER TABLE sl_sales DROP CONSTRAINT IF EXISTS pk_sales CASCADE")
 spark.sql(f"ALTER TABLE sl_sales ADD CONSTRAINT pk_sales PRIMARY KEY (sale_id)")
 print("✅ sl_sales: PK(sale_id)")
 
@@ -165,7 +165,7 @@ print("✅ sl_sales: PK(sale_id)")
 
 # DBTITLE 1,PK制約 — sl_sale_items
 spark.sql(f"ALTER TABLE sl_sale_items ALTER COLUMN sale_item_id SET NOT NULL")
-spark.sql(f"ALTER TABLE sl_sale_items DROP CONSTRAINT IF EXISTS pk_sale_items")
+spark.sql(f"ALTER TABLE sl_sale_items DROP CONSTRAINT IF EXISTS pk_sale_items CASCADE")
 spark.sql(f"ALTER TABLE sl_sale_items ADD CONSTRAINT pk_sale_items PRIMARY KEY (sale_item_id)")
 print("✅ sl_sale_items: PK(sale_item_id)")
 
@@ -205,7 +205,7 @@ print("✅ sl_sale_items.product_id → sl_products.product_id")
 
 # DBTITLE 1,PK制約 — gd_rfm
 spark.sql(f"ALTER TABLE gd_rfm ALTER COLUMN customer_id SET NOT NULL")
-spark.sql(f"ALTER TABLE gd_rfm DROP CONSTRAINT IF EXISTS pk_rfm")
+spark.sql(f"ALTER TABLE gd_rfm DROP CONSTRAINT IF EXISTS pk_rfm CASCADE")
 spark.sql(f"ALTER TABLE gd_rfm ADD CONSTRAINT pk_rfm PRIMARY KEY (customer_id)")
 print("✅ gd_rfm: PK(customer_id)")
 
@@ -213,7 +213,7 @@ print("✅ gd_rfm: PK(customer_id)")
 
 # DBTITLE 1,PK制約 — gd_store_trade_area
 spark.sql(f"ALTER TABLE gd_store_trade_area ALTER COLUMN store_id SET NOT NULL")
-spark.sql(f"ALTER TABLE gd_store_trade_area DROP CONSTRAINT IF EXISTS pk_store_trade_area")
+spark.sql(f"ALTER TABLE gd_store_trade_area DROP CONSTRAINT IF EXISTS pk_store_trade_area CASCADE")
 spark.sql(f"ALTER TABLE gd_store_trade_area ADD CONSTRAINT pk_store_trade_area PRIMARY KEY (store_id)")
 print("✅ gd_store_trade_area: PK(store_id)")
 
@@ -222,7 +222,7 @@ print("✅ gd_store_trade_area: PK(store_id)")
 # DBTITLE 1,PK制約 — gd_store_sales_summary
 spark.sql(f"ALTER TABLE gd_store_sales_summary ALTER COLUMN store_id SET NOT NULL")
 spark.sql(f"ALTER TABLE gd_store_sales_summary ALTER COLUMN sale_month SET NOT NULL")
-spark.sql(f"ALTER TABLE gd_store_sales_summary DROP CONSTRAINT IF EXISTS pk_store_sales_summary")
+spark.sql(f"ALTER TABLE gd_store_sales_summary DROP CONSTRAINT IF EXISTS pk_store_sales_summary CASCADE")
 spark.sql(f"ALTER TABLE gd_store_sales_summary ADD CONSTRAINT pk_store_sales_summary PRIMARY KEY (store_id, sale_month)")
 print("✅ gd_store_sales_summary: PK(store_id, sale_month)")
 
@@ -231,7 +231,7 @@ print("✅ gd_store_sales_summary: PK(store_id, sale_month)")
 # DBTITLE 1,PK制約 — gd_category_sales
 spark.sql(f"ALTER TABLE gd_category_sales ALTER COLUMN category_id SET NOT NULL")
 spark.sql(f"ALTER TABLE gd_category_sales ALTER COLUMN sale_month SET NOT NULL")
-spark.sql(f"ALTER TABLE gd_category_sales DROP CONSTRAINT IF EXISTS pk_category_sales")
+spark.sql(f"ALTER TABLE gd_category_sales DROP CONSTRAINT IF EXISTS pk_category_sales CASCADE")
 spark.sql(f"ALTER TABLE gd_category_sales ADD CONSTRAINT pk_category_sales PRIMARY KEY (category_id, sale_month)")
 print("✅ gd_category_sales: PK(category_id, sale_month)")
 
@@ -241,7 +241,7 @@ print("✅ gd_category_sales: PK(category_id, sale_month)")
 spark.sql(f"ALTER TABLE gd_weather_sales ALTER COLUMN weather SET NOT NULL")
 spark.sql(f"ALTER TABLE gd_weather_sales ALTER COLUMN prefecture SET NOT NULL")
 spark.sql(f"ALTER TABLE gd_weather_sales ALTER COLUMN `month` SET NOT NULL")
-spark.sql(f"ALTER TABLE gd_weather_sales DROP CONSTRAINT IF EXISTS pk_weather_sales")
+spark.sql(f"ALTER TABLE gd_weather_sales DROP CONSTRAINT IF EXISTS pk_weather_sales CASCADE")
 spark.sql(f"ALTER TABLE gd_weather_sales ADD CONSTRAINT pk_weather_sales PRIMARY KEY (weather, prefecture, `month`)")
 print("✅ gd_weather_sales: PK(weather, prefecture, month)")
 
