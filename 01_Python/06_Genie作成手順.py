@@ -28,7 +28,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./00_config
+# MAGIC %run ../00_config
 
 # COMMAND ----------
 
@@ -56,42 +56,7 @@
 
 # MAGIC %md
 # MAGIC ---
-# MAGIC ## 2. 登録するテーブルの確認
-
-# COMMAND ----------
-
-# MAGIC %md-sandbox
-# MAGIC <div style="border-left: 4px solid #1976D2; background: #E3F2FD; padding: 12px 16px; border-radius: 4px; margin: 10px 0;">
-# MAGIC <strong>🔗 なぜこのテーブルを選ぶのか</strong><br>
-# MAGIC Genie は登録されたテーブルの<strong>コメント・カラム名・PK/FK</strong>を読んでSQLを生成します。<br>
-# MAGIC 「何を聞けるか」はテーブルの内容で決まるので、質問に答えられるテーブルを選びましょう。
-# MAGIC </div>
-
-# COMMAND ----------
-
-# DBTITLE 1,Genie に登録するテーブルとレコード数
-tables = [
-    ("sl_stores",              "店舗マスタ（住所・座標・面積・タイプ）"),
-    ("sl_customers",           "会員マスタ（性別・都道府県・登録店舗）"),
-    ("gd_store_sales_summary", "店舗×月別 売上サマリ"),
-    ("gd_rfm",                 "RFM分析結果（顧客セグメント）"),
-    ("gd_store_trade_area",    "店舗別 商圏サマリ（売上・顧客数・周辺施設）"),
-    ("gd_category_sales",      "カテゴリ×月別 売上"),
-    ("gd_weather_sales",       "天気×売上 相関分析"),
-]
-
-print(f"カタログ: {MY_CATALOG}")
-print(f"スキーマ: {MY_SCHEMA}")
-print(f"{'─' * 60}")
-for table, desc in tables:
-    count = spark.table(table).count()
-    print(f"  {table:<30} {count:>8,} 件  | {desc}")
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ---
-# MAGIC ## 3. Genie スペースの作成手順
+# MAGIC ## 2. Genie スペースの作成手順
 
 # COMMAND ----------
 
@@ -150,7 +115,7 @@ for table, desc in tables:
 
 # MAGIC %md
 # MAGIC ---
-# MAGIC ## 4. General Instructions の設定
+# MAGIC ## 3. General Instructions の設定
 
 # COMMAND ----------
 
@@ -194,7 +159,7 @@ for table, desc in tables:
 
 # MAGIC %md
 # MAGIC ---
-# MAGIC ## 5. サンプル質問を登録する
+# MAGIC ## 4. サンプル質問を登録する
 
 # COMMAND ----------
 
@@ -262,7 +227,7 @@ for table, desc in tables:
 
 # MAGIC %md
 # MAGIC ---
-# MAGIC ## 6. Genie に話しかけてみよう！
+# MAGIC ## 5. Genie に話しかけてみよう！
 
 # COMMAND ----------
 

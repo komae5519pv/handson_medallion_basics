@@ -24,9 +24,9 @@
 # COMMAND ----------
 
 # DBTITLE 1,変数設定
-MY_CATALOG  = "konomi_demo_catalog"       # 任意のカタログ名に変更してください
-MY_SCHEMA   = "trade_area_analysis"       # 任意のスキーマ名に変更してください
-MY_VOLUME   = "raw_data"                  # 任意のVolume名に変更してください
+MY_CATALOG  = "handson"                            # 任意のカタログ名に変更してください
+MY_SCHEMA   = "trade_area_analysis_yourname"       # 任意のスキーマ名に変更してください
+MY_VOLUME   = "raw_data"
 
 VOLUME_PATH = f"/Volumes/{MY_CATALOG}/{MY_SCHEMA}/{MY_VOLUME}"
 

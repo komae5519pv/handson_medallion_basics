@@ -17,7 +17,7 @@
 # MAGIC %md-sandbox
 # MAGIC <div style="border-left: 4px solid #FFC107; background: #FFF8E1; padding: 12px 16px; border-radius: 4px; margin: 10px 0;">
 # MAGIC <strong>🎯 このノートブックのゴール</strong><br>
-# MAGIC これまで手動で実行してきたノートブック（02→03→04→05）を、<br>
+# MAGIC これまで手動で実行してきたノートブック（01→02→03→04→05）を、<br>
 # MAGIC Databricks Jobs を使って<strong>ワークフロー化（DAG）</strong>し、自動実行できるようにします。<br>
 # MAGIC ここではUI操作でジョブを作成する手順を説明します。
 # MAGIC </div>
@@ -53,43 +53,50 @@
 # MAGIC %md-sandbox
 # MAGIC <div style="border-left: 4px solid #1976D2; background: #E3F2FD; padding: 12px 16px; border-radius: 4px; margin: 10px 0;">
 # MAGIC <strong>🔗 パイプラインの全体像</strong><br>
-# MAGIC 4つのノートブックを順番に実行する直列DAGを作成します。
+# MAGIC 5つのノートブックを順番に実行する直列DAGを作成します。
 # MAGIC </div>
 # MAGIC <div style="display: flex; justify-content: center; margin: 16px 0;">
-# MAGIC <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 120" width="820">
+# MAGIC <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 120" width="1020">
 # MAGIC   <defs>
 # MAGIC     <marker id="arr" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="10" markerHeight="7" orient="auto">
 # MAGIC       <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
 # MAGIC     </marker>
 # MAGIC   </defs>
 # MAGIC   <style>text{font-family:"Helvetica Neue",Helvetica,Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,sans-serif}</style>
-# MAGIC   <rect x="0" y="10" width="185" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-# MAGIC   <rect x="0" y="10" width="4" height="56" rx="2" fill="#3b82f6"/>
-# MAGIC   <text x="16" y="33" font-size="12" font-weight="600" fill="#1e293b">02_データ取り込み</text>
-# MAGIC   <text x="16" y="52" font-size="10" fill="#94a3b8">Bronze — CSV → Delta</text>
-# MAGIC   <line x1="185" y1="38" x2="220" y2="38" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
-# MAGIC   <rect x="225" y="10" width="185" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-# MAGIC   <rect x="225" y="10" width="4" height="56" rx="2" fill="#64748b"/>
-# MAGIC   <text x="241" y="33" font-size="12" font-weight="600" fill="#1e293b">03_データ加工 Silver</text>
-# MAGIC   <text x="241" y="52" font-size="10" fill="#94a3b8">型変換・JOIN・クレンジング</text>
-# MAGIC   <line x1="410" y1="38" x2="445" y2="38" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
-# MAGIC   <rect x="450" y="10" width="185" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-# MAGIC   <rect x="450" y="10" width="4" height="56" rx="2" fill="#f59e0b"/>
-# MAGIC   <text x="466" y="33" font-size="12" font-weight="600" fill="#1e293b">04_データ加工 Gold</text>
-# MAGIC   <text x="466" y="52" font-size="10" fill="#94a3b8">RFM分析・AI関数・集計</text>
-# MAGIC   <line x1="635" y1="38" x2="670" y2="38" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
-# MAGIC   <rect x="675" y="10" width="185" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-# MAGIC   <rect x="675" y="10" width="4" height="56" rx="2" fill="#22c55e"/>
-# MAGIC   <text x="691" y="33" font-size="12" font-weight="600" fill="#1e293b">05_テーブル設定</text>
-# MAGIC   <text x="691" y="52" font-size="10" fill="#94a3b8">PK/FK・コメント・マスキング</text>
-# MAGIC   <rect x="0" y="84" width="7" height="7" rx="2" fill="#3b82f6"/>
-# MAGIC   <text x="11" y="91" font-size="9" fill="#94a3b8">Bronze</text>
-# MAGIC   <rect x="58" y="84" width="7" height="7" rx="2" fill="#64748b"/>
-# MAGIC   <text x="69" y="91" font-size="9" fill="#94a3b8">Silver</text>
-# MAGIC   <rect x="110" y="84" width="7" height="7" rx="2" fill="#f59e0b"/>
-# MAGIC   <text x="121" y="91" font-size="9" fill="#94a3b8">Gold</text>
-# MAGIC   <rect x="155" y="84" width="7" height="7" rx="2" fill="#22c55e"/>
-# MAGIC   <text x="166" y="91" font-size="9" fill="#94a3b8">Governance</text>
+# MAGIC   <rect x="0" y="10" width="170" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+# MAGIC   <rect x="0" y="10" width="4" height="56" rx="2" fill="#8b5cf6"/>
+# MAGIC   <text x="16" y="33" font-size="12" font-weight="600" fill="#1e293b">01_データ準備</text>
+# MAGIC   <text x="16" y="52" font-size="10" fill="#94a3b8">CSV生成 → Volume</text>
+# MAGIC   <line x1="170" y1="38" x2="200" y2="38" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+# MAGIC   <rect x="205" y="10" width="170" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+# MAGIC   <rect x="205" y="10" width="4" height="56" rx="2" fill="#3b82f6"/>
+# MAGIC   <text x="221" y="33" font-size="12" font-weight="600" fill="#1e293b">02_データ取り込み</text>
+# MAGIC   <text x="221" y="52" font-size="10" fill="#94a3b8">Bronze — CSV → Delta</text>
+# MAGIC   <line x1="375" y1="38" x2="405" y2="38" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+# MAGIC   <rect x="410" y="10" width="170" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+# MAGIC   <rect x="410" y="10" width="4" height="56" rx="2" fill="#64748b"/>
+# MAGIC   <text x="426" y="33" font-size="12" font-weight="600" fill="#1e293b">03_データ加工 Silver</text>
+# MAGIC   <text x="426" y="52" font-size="10" fill="#94a3b8">型変換・JOIN・クレンジング</text>
+# MAGIC   <line x1="580" y1="38" x2="610" y2="38" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+# MAGIC   <rect x="615" y="10" width="170" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+# MAGIC   <rect x="615" y="10" width="4" height="56" rx="2" fill="#f59e0b"/>
+# MAGIC   <text x="631" y="33" font-size="12" font-weight="600" fill="#1e293b">04_データ加工 Gold</text>
+# MAGIC   <text x="631" y="52" font-size="10" fill="#94a3b8">RFM分析・AI関数・集計</text>
+# MAGIC   <line x1="785" y1="38" x2="815" y2="38" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+# MAGIC   <rect x="820" y="10" width="170" height="56" rx="6" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+# MAGIC   <rect x="820" y="10" width="4" height="56" rx="2" fill="#22c55e"/>
+# MAGIC   <text x="836" y="33" font-size="12" font-weight="600" fill="#1e293b">05_テーブル設定</text>
+# MAGIC   <text x="836" y="52" font-size="10" fill="#94a3b8">PK/FK・コメント・マスキング</text>
+# MAGIC   <rect x="0" y="84" width="7" height="7" rx="2" fill="#8b5cf6"/>
+# MAGIC   <text x="11" y="91" font-size="9" fill="#94a3b8">Init</text>
+# MAGIC   <rect x="42" y="84" width="7" height="7" rx="2" fill="#3b82f6"/>
+# MAGIC   <text x="53" y="91" font-size="9" fill="#94a3b8">Bronze</text>
+# MAGIC   <rect x="105" y="84" width="7" height="7" rx="2" fill="#64748b"/>
+# MAGIC   <text x="116" y="91" font-size="9" fill="#94a3b8">Silver</text>
+# MAGIC   <rect x="160" y="84" width="7" height="7" rx="2" fill="#f59e0b"/>
+# MAGIC   <text x="171" y="91" font-size="9" fill="#94a3b8">Gold</text>
+# MAGIC   <rect x="205" y="84" width="7" height="7" rx="2" fill="#22c55e"/>
+# MAGIC   <text x="216" y="91" font-size="9" fill="#94a3b8">Governance</text>
 # MAGIC </svg>
 # MAGIC </div>
 
@@ -116,8 +123,8 @@
 # MAGIC %md-sandbox
 # MAGIC <div style="border-left: 4px solid #388E3C; background: #E8F5E9; padding: 12px 16px; border-radius: 4px; margin: 10px 0;">
 # MAGIC <strong>📝 ハンズオン: Step 2 — タスクを追加</strong><br><br>
-# MAGIC 以下の4タスクを順番に追加してください。<br>
-# MAGIC ノートブックのパスは、ご自身がハンズオンで使用したトラック（SQL / Python）に合わせてください。
+# MAGIC 以下の5タスクを順番に追加してください。<br>
+# MAGIC このノートブックと同じフォルダ内のノートブックを指定してください。
 # MAGIC </div>
 
 # COMMAND ----------
@@ -135,23 +142,28 @@
 # MAGIC   </thead>
 # MAGIC   <tbody>
 # MAGIC     <tr style="background: #f9f9f9;">
-# MAGIC       <td style="padding: 8px 15px;"><b>ingest</b></td>
-# MAGIC       <td style="padding: 8px 15px;"><code>01_SQL/02_データ取り込み</code><br/>または <code>02_Python/02_データ取り込み</code></td>
+# MAGIC       <td style="padding: 8px 15px;"><b>init_data</b></td>
+# MAGIC       <td style="padding: 8px 15px;"><code>01_データ準備</code></td>
 # MAGIC       <td style="padding: 8px 15px;">（なし — 最初に実行）</td>
 # MAGIC     </tr>
 # MAGIC     <tr>
-# MAGIC       <td style="padding: 8px 15px;"><b>silver</b></td>
-# MAGIC       <td style="padding: 8px 15px;"><code>01_SQL/03_データ加工_Silver</code><br/>または <code>02_Python/03_データ加工_Silver</code></td>
-# MAGIC       <td style="padding: 8px 15px;">ingest</td>
+# MAGIC       <td style="padding: 8px 15px;"><b>ingest</b></td>
+# MAGIC       <td style="padding: 8px 15px;"><code>02_データ取り込み_Bronze</code></td>
+# MAGIC       <td style="padding: 8px 15px;">init_data</td>
 # MAGIC     </tr>
 # MAGIC     <tr style="background: #f9f9f9;">
-# MAGIC       <td style="padding: 8px 15px;"><b>gold</b></td>
-# MAGIC       <td style="padding: 8px 15px;"><code>01_SQL/04_データ加工_Gold</code><br/>または <code>02_Python/04_データ加工_Gold</code></td>
-# MAGIC       <td style="padding: 8px 15px;">silver</td>
+# MAGIC       <td style="padding: 8px 15px;"><b>silver</b></td>
+# MAGIC       <td style="padding: 8px 15px;"><code>03_データ加工_Silver</code></td>
+# MAGIC       <td style="padding: 8px 15px;">ingest</td>
 # MAGIC     </tr>
 # MAGIC     <tr>
+# MAGIC       <td style="padding: 8px 15px;"><b>gold</b></td>
+# MAGIC       <td style="padding: 8px 15px;"><code>04_データ加工_Gold</code></td>
+# MAGIC       <td style="padding: 8px 15px;">silver</td>
+# MAGIC     </tr>
+# MAGIC     <tr style="background: #f9f9f9;">
 # MAGIC       <td style="padding: 8px 15px;"><b>governance</b></td>
-# MAGIC       <td style="padding: 8px 15px;"><code>01_SQL/05_テーブル設定</code><br/>または <code>02_Python/05_テーブル設定</code></td>
+# MAGIC       <td style="padding: 8px 15px;"><code>05_テーブル設定</code></td>
 # MAGIC       <td style="padding: 8px 15px;">gold</td>
 # MAGIC     </tr>
 # MAGIC   </tbody>
@@ -290,7 +302,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./00_config
+# MAGIC %run ../00_config
 
 # COMMAND ----------
 

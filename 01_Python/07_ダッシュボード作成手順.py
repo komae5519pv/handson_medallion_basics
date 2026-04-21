@@ -23,7 +23,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run ./00_config
+# MAGIC %run ../00_config
 
 # COMMAND ----------
 
@@ -49,42 +49,7 @@
 
 # MAGIC %md
 # MAGIC ---
-# MAGIC ## 2. 使用するテーブルの確認
-
-# COMMAND ----------
-
-# MAGIC %md-sandbox
-# MAGIC <div style="border-left: 4px solid #1976D2; background: #E3F2FD; padding: 12px 16px; border-radius: 4px; margin: 10px 0;">
-# MAGIC <strong>🔗 ダッシュボードのデータソース</strong><br>
-# MAGIC AIにダッシュボードを作らせるとき、テーブルのカタログ・スキーマ名をプロンプトに含めます。<br>
-# MAGIC テーブルコメント・カラムコメントが設定済みなので、AIがデータの意味を理解して適切なチャートを提案してくれます。
-# MAGIC </div>
-
-# COMMAND ----------
-
-# DBTITLE 1,ダッシュボードに使うテーブル一覧
-tables = [
-    ("gd_store_trade_area",    "店舗別 商圏サマリ（売上・顧客数・競合店数・周辺施設）"),
-    ("gd_store_sales_summary", "店舗×月別 売上サマリ（取引件数・顧客数・売上）"),
-    ("gd_category_sales",      "カテゴリ×月別 売上（園芸用品/工具/塗料/木材/日用品）"),
-    ("gd_rfm",                 "RFM分析結果（顧客セグメント別の特徴）"),
-    ("gd_weather_sales",       "天気×売上 相関分析（気温・降水量と売上の関係）"),
-]
-
-print(f"カタログ: {MY_CATALOG}")
-print(f"スキーマ: {MY_SCHEMA}")
-print(f"{'─' * 60}")
-for table, desc in tables:
-    fqn = f"{MY_CATALOG}.{MY_SCHEMA}.{table}"
-    count = spark.table(table).count()
-    print(f"  {fqn:<55} {count:>6,} 件")
-    print(f"    └ {desc}")
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ---
-# MAGIC ## 3. ダッシュボードの作成手順
+# MAGIC ## 2. ダッシュボードの作成手順
 
 # COMMAND ----------
 
@@ -179,7 +144,7 @@ print(prompt)
 
 # MAGIC %md
 # MAGIC ---
-# MAGIC ## 4. 生成されたダッシュボードの確認
+# MAGIC ## 3. 生成されたダッシュボードの確認
 
 # COMMAND ----------
 
@@ -215,7 +180,7 @@ print(prompt)
 
 # MAGIC %md
 # MAGIC ---
-# MAGIC ## 5. ダッシュボードに Genie を連携する
+# MAGIC ## 4. ダッシュボードに Genie を連携する
 
 # COMMAND ----------
 
@@ -244,7 +209,7 @@ print(prompt)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ![](./_images/step1_copy_genie_link.png)
+# MAGIC ![](../_images/step1_copy_genie_link.png)
 
 # COMMAND ----------
 
@@ -262,7 +227,7 @@ print(prompt)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ![](./_images/step2_add_genie_url.png)
+# MAGIC ![](../_images/step2_add_genie_url.png)
 
 # COMMAND ----------
 
@@ -275,7 +240,7 @@ print(prompt)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ![](./_images/step3_dashboard.png)
+# MAGIC ![](../_images/step3_dashboard.png)
 
 # COMMAND ----------
 

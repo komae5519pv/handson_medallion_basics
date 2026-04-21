@@ -248,20 +248,37 @@ print(f"sl_facilities: {spark.table(f'sl_facilities').count()} 件")
 
 # COMMAND ----------
 
+# DBTITLE 1,Delta操作のリトライヘルパー（Auto-OPTIMIZE競合対策）
+import time
+
+def retry_delta(sql_text, max_retries=3, delay=5):
+    """自動最適化（Auto-OPTIMIZE）との競合時にリトライする"""
+    for attempt in range(max_retries):
+        try:
+            return spark.sql(sql_text)
+        except Exception as e:
+            if "DELTA_CONCURRENT_WRITE" in str(e) and attempt < max_retries - 1:
+                print(f"⏳ Auto-OPTIMIZE と競合 — {delay}秒後にリトライ ({attempt+1}/{max_retries})")
+                time.sleep(delay)
+            else:
+                raise
+
+# COMMAND ----------
+
 # DBTITLE 1,テーブルの変更履歴を確認
 display(spark.sql(f"DESCRIBE HISTORY sl_stores"))
 
 # COMMAND ----------
 
 # DBTITLE 1,わざと壊してみる
-spark.sql(f"DELETE FROM sl_stores WHERE store_type = '大型'")
+retry_delta(f"DELETE FROM sl_stores WHERE store_type = '大型'")
 remaining = spark.table(f"sl_stores").count()
 print(f"残りレコード数: {remaining}")
 
 # COMMAND ----------
 
 # DBTITLE 1,RESTORE で復元
-spark.sql(f"RESTORE TABLE sl_stores TO VERSION AS OF 0")
+retry_delta(f"RESTORE TABLE sl_stores TO VERSION AS OF 0")
 restored = spark.table(f"sl_stores").count()
 print(f"復元後レコード数: {restored}")
 
