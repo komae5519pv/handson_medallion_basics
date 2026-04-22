@@ -203,7 +203,7 @@ df_ai_query = spark.sql(f"""
       prefecture,
       store_type,
       ai_query(
-        'databricks-claude-3-7-sonnet',
+        'databricks-claude-opus-4-7',
         CONCAT(
           'あなたはホームセンター業界の競合分析アナリストです。',
           '以下の店舗の商圏に実在する競合ホームセンターチェーンを最大3つ挙げ、',
