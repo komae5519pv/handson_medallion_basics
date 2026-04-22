@@ -43,7 +43,7 @@ handson_hc_trade_area/
 │   ├── 06_Genie作成手順.py               Genie Space セットアップ
 │   ├── 07_ダッシュボード作成手順.py         AI/BI ダッシュボード作成
 │   ├── 08_Jobsワークフロー作成手順.py      Jobs DAGワークフロー
-│   └── 09_Genieインタラクティブ分析.py     Genie Code エージェントモードで対話的分析
+│   └── 09_Genie Codeインタラクティブ分析.py     Genie Code エージェントモードで対話的分析
 │
 ├── 02_SQL+Python/                       ← SQL+Python トラック（spark.sql() + Pythonループ）
 │   ├── 01_データ準備.py                   サンプルCSV生成 → Volume格納
@@ -54,7 +54,7 @@ handson_hc_trade_area/
 │   ├── 06_Genie作成手順.py               Genie Space セットアップ
 │   ├── 07_ダッシュボード作成手順.py         AI/BI ダッシュボード作成
 │   ├── 08_Jobsワークフロー作成手順.py      Jobs DAGワークフロー
-│   └── 09_Genieインタラクティブ分析.py     Genie Code エージェントモードで対話的分析
+│   └── 09_Genie Codeインタラクティブ分析.py     Genie Code エージェントモードで対話的分析
 │
 └── _images/                             ← ダッシュボード手順用スクリーンショット
 ```
