@@ -95,4 +95,4 @@ handson_hc_trade_area/
 | 06 | Genie作成手順 | 20分 | Genie Space 作成・General Instructions・サンプル質問 |
 | 07 | ダッシュボード作成手順 | 15分 | AI/BI ダッシュボード作成（Genie Code）・Genie連携 |
 | 08 | Jobsワークフロー作成手順 | 15分 | ノートブックをJobsでDAG化・実行体験 |
-| 09 | Genieインタラクティブ分析 | 15分 | Genie Code エージェントモードで自然言語→コード生成→分析洞察 |
+| 09 | Genie Codeインタラクティブ分析 | 15分 | Genie Code エージェントモードで自然言語→コード生成→分析洞察 |
